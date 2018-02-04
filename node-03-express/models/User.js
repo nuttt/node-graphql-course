@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 const db = require('../db')
 
 const SHA256_SECRET = 'QWERTY'
@@ -25,15 +26,26 @@ const User = {
     if (!user) {
       return null
     }
-    if (createSHA256Hex(password) === user.password) {
-      return user
+    if (createSHA256Hex(password) !== user.password) {
+      return null
     }
-    return null
+
+    return jwt.sign({ id: user.id }, SHA256_SECRET)
   },
 
   get: async (id) => {
     const users = await db('users').where({ id })
     return users[0]
+  },
+
+  /**
+   * @throws {TokenExpiredError}
+   * @throws {JsonWebTokenError}
+   */
+  getByToken: async (token) => {
+    let payload = null
+    payload = jwt.verify(token, SHA256_SECRET)
+    return User.get(payload.id)
   }
 }
 
