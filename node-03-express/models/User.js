@@ -1,6 +1,7 @@
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const db = require('../db')
+const _ = require('lodash')
 
 const SHA256_SECRET = 'QWERTY'
 const createSHA256Hex = (data) => {
@@ -10,6 +11,14 @@ const createSHA256Hex = (data) => {
 }
 
 const User = {
+  get: async (id) => {
+    const users = await db('users').where({ id })
+    if (!users[0]) {
+      return undefined
+    }
+    return _.omit(users[0], 'password')
+  },
+
   create: async (username, password) => {
     const ids = await db('users').insert({
       username,
@@ -31,11 +40,6 @@ const User = {
     }
 
     return jwt.sign({ id: user.id }, SHA256_SECRET)
-  },
-
-  get: async (id) => {
-    const users = await db('users').where({ id })
-    return users[0]
   },
 
   /**
