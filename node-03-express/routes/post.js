@@ -6,6 +6,13 @@ const User = require('../models/User')
 const Post = require('../models/Post')
 const Comment = require('../models/Comment')
 
+const checkAuthMiddleware = (req, res, next) => {
+  if (!req.user) {
+    return res.sendStatus(401)
+  }
+  next()
+}
+
 router.get('/', async (req, res) => {
   const posts = await Post.list()
   posts.forEach(async (post) => {
@@ -24,6 +31,9 @@ router.get('/user/:userId', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const post = await Post.get(req.params.id)
+  if (!post) {
+    return res.sendStatus(404)
+  }
   post.user = await User.get(post.userId)
   post.comments = await Comment.listByPost(post.id)
   post.comments.forEach(async (comment) => {
@@ -33,13 +43,19 @@ router.get('/:id', async (req, res) => {
 })
 
 // TODO: Add auth middleware
-router.post('/', async (req, res) => {
-
+router.post('/', checkAuthMiddleware, async (req, res) => {
+  const post = await Post.create(req.user.id, req.body.title, req.body.content)
+  res.status(200).json(post)
 })
 
 // TODO: Add auth middleware
-router.post('/:id/comment', async (req, res) => {
-
+router.post('/:id/comment', checkAuthMiddleware, async (req, res) => {
+  const post = await Post.get(req.params.id)
+  if (!post) {
+    return res.sendStatus(400)
+  }
+  const comment = await Comment.create(req.user.id, post.id, req.body.content)
+  res.status(200).json(comment)
 })
 
 module.exports = router

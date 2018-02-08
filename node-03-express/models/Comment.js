@@ -11,7 +11,8 @@ const Comment = {
   },
 
   create: async (userId, postId, content) => {
-    return db('comments').insert({ userId, postId, content })
+    const ids = await db('comments').insert({ userId, postId, content })
+    return Comment.get(ids[0])
   }
 }
 
