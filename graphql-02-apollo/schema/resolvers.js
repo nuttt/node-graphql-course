@@ -1,16 +1,21 @@
 const Post = require('../models/Post')
 const User = require('../models/User')
 
+const DataLoader = require('dataloader')
+
+const UserLoader = new DataLoader(async (keys) => {
+  return Promise.all(keys.map(User.get))
+})
+
 module.exports = {
   Query: {
     posts: () => {
-      console.log('hey!')
       return Post.list()
     }
   },
   Post: {
     user: (post) => {
-      return User.get(post.userId)
+      return UserLoader.load(post.userId)
     }
   },
   User: {
