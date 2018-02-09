@@ -44,6 +44,18 @@ module.exports = {
       pubsub.publish('postCreated', post)
       return post
     },
+    createComment: async (obj, args, context) => {
+      if (!context.user) {
+        throw new Error('401')
+      }
+      const { data } = args
+      const { postId, content } = data
+      const comment = await Comment.create(context.user.id, postId, content)
+      comment.user = context.user
+      pubsub.publish('commentCreated', comment)
+      return comment
+    },
+    
     login: (obj, args) => {
       return User.authenticate(args.username, args.password)
     },

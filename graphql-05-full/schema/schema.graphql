@@ -24,6 +24,11 @@ input CreatePostInput {
   content: String!
 }
 
+input CreateCommentInput {
+  postId: ID!
+  content: String!
+}
+
 type Query {
   posts: [Post]
   post(id: Int!): Post
@@ -31,6 +36,7 @@ type Query {
 
 type Mutation {
   createPost(data: CreatePostInput): Post
+  createComment(data: CreateCommentInput): Comment
   login(username: String, password: String): String
   register(username: String, password: String): User
 }
