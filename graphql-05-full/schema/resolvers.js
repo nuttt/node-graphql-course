@@ -43,6 +43,9 @@ module.exports = {
     },
     login: (obj, args) => {
       return User.authenticate(args.username, args.password)
+    },
+    register: (obj, args) => {
+      return User.create(args.username, args.password)
     }
   },
   Subscription: {
