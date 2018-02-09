@@ -8,6 +8,9 @@ module.exports = {
   Query: {
     posts: () => {
       return Post.list()
+    },
+    post: (obj, args) => {
+      return Post.get(args.id)
     }
   },
   Post: {
