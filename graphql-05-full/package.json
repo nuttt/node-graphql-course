@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js",
     "dev": "nodemon -e js,graphql server.js"
   },
@@ -22,6 +22,7 @@
     "graphql": "^0.13.0",
     "graphql-subscriptions": "^0.5.6",
     "graphql-tools": "^2.20.2",
+    "jest": "^22.2.2",
     "jsonwebtoken": "^8.1.1",
     "knex": "^0.14.2",
     "lodash": "^4.17.5",

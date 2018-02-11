@@ -30,8 +30,8 @@ input CreateCommentInput {
 }
 
 type Query {
+  hello: String
   posts: [Post]
-  # post(id: Int!): Post
   post(id: ID!): Post
 }
 
