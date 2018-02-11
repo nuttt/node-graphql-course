@@ -24,12 +24,14 @@ app.use(bodyParser.json())
 
 app.use(async (req, res, next) => {
   const token = req.headers["authorization"] || req.query.token
+  console.log(req.query.token)
   if (!token) {
     return next()
   }
 
   try {
     req.user = await User.getByToken(token)
+    console.log(req.user)
     next()
   } catch (e) {
     if (e.name === 'TokenExpiredError' || e.name === 'JsonWebTokenError') {
@@ -53,11 +55,11 @@ app.use('/graphql', graphqlExpress((req, res) => ({
 
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
-  subscriptionsEndpoint: 'ws://localhost:3000/subscriptions'
+  subscriptionsEndpoint: 'ws://localhost:3001/subscriptions'
 }))
 
 const server = createServer(app)
-server.listen(3000, () => {
+server.listen(3001, () => {
   new SubscriptionServer({
     execute,
     subscribe,

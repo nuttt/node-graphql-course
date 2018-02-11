@@ -15,6 +15,10 @@ module.exports = {
   },
   Post: {
     user: (post, args, context) => {
+      if (post.user) {
+        console.log(context)
+        return post.user
+      }
       return context.loaders.userLoader.load(post.userId)
     },
     comments: (post) => {
@@ -27,9 +31,6 @@ module.exports = {
     }
   },
   Comment: {
-    post: (comment) => {
-      return Post.get(comment.postId)
-    },
     user: (comment, args, context) => {
       return context.loaders.userLoader.load(comment.userId)
     }
@@ -41,6 +42,7 @@ module.exports = {
       }
       const post = await Post.create(context.user.id, args.data.title,
       args.data.content)
+      post.user = context.user
       pubsub.publish('postCreated', post)
       return post
     },

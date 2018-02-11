@@ -31,7 +31,8 @@ input CreateCommentInput {
 
 type Query {
   posts: [Post]
-  post(id: Int!): Post
+  # post(id: Int!): Post
+  post(id: ID!): Post
 }
 
 type Mutation {
