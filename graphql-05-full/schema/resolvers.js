@@ -6,6 +6,7 @@ const pubsub = require('../pubsub')
 
 module.exports = {
   Query: {
+    hello: () => 'Hello GraphQL!',
     posts: () => {
       return Post.list()
     },
@@ -55,7 +56,7 @@ module.exports = {
       pubsub.publish('commentCreated', comment)
       return comment
     },
-    
+
     login: (obj, args) => {
       return User.authenticate(args.username, args.password)
     },
